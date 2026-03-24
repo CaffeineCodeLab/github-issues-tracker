@@ -8,7 +8,7 @@ function handleLogin() {
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         localStorage.setItem("isLoggedIn", "true");
-        window.location.herf="main.html";
+        window.location.href="main.html";
     } else {
         errorMsg.classList.remove("hidden");
     }
