@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Issues Tracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Issues Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
     body { font-family: 'Inter', sans-serif; }
-    .card-open {border-top: 3px solid #22c55e;} /*green*/
-    .card-open {border-top: 3px solid #a855f7;} /*purple*/
 
+    .card-open  { border-top: 3px solid #22c55e !important; } 
+    .card-closed { border-top: 3px solid #a855f7 !important; } 
 
     .badge-high   { background: #fee2e2; color: #dc2626; }
     .badge-medium { background: #ffedd5; color: #ea580c; }
     .badge-low    { background: #f3f4f6; color: #6b7280; }
 
-    /* Label badge colors */
-    .label-bug          { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-    .label-helpwanted   { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+
+    .label-bug          { background: #fee2e2; color: #dc2626; border: 1px solid #FECACA; }
+    .label-helpwanted   { background: #FFF8DB; color: #a16207; border: 1px solid #FDE68A; }
     .label-enhancement  { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+    .label-documentation { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+    .label-goodfirstissue { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
     .label-default      { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
 
-    /* Spinner */
     .spinner {
       border: 3px solid #e5e7eb;
       border-top: 3px solid #6366f1;
@@ -33,91 +33,102 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
-
+  </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
-    
-    <!-- Navbar -->
-     <nav class="bg-white border-b border-gray-200 px-6 pu-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <img src="./assets/github-logo.png" alt="Logo" class="w-8 h-8 rounded-full"/>
-            <span class="font-bold text-gray-900 text-lg">GitHub Issues Tracker</span>
-        </div>
 
-        <div class="flex items-center gap-3">
-            <input id="search-input"
-        type="text"
-        placeholder="🔍 Search issues..."
-        class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64"
-        oninput="handleSearch()"
-      />
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
-        + New Issue
-      </button>
-        </div>
-     </nav>
+  <!-- Navbar -->
+  <nav class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
 
-     <div class="max-w-6xl mx-auto px-4 py-8">
-        <!-- Tab section container -->
+    <div class="flex items-center gap-3">
+      <img src="./assets/github-logo.png" alt="Logo" class="w-8 h-8 rounded-full"/>
+      <span class="font-bold text-gray-900 text-lg">GitHub Issues Tracker</span>
+    </div>
+
+
+    <div class="flex items-center gap-3">
+  
+  <div class="relative">
+    <img src="./assets/Vector.png" 
+         class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 opacity-60" />
+
+    <input
+      id="search-input"
+      type="text"
+      placeholder="Search issues..."
+      class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64"
+      oninput="handleSearch()"
+    />
+  </div>
+
+
+  <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
+    + New Issue
+  </button>
+
+</div>
+  </nav>
+
+
+  <!-- Page content -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+
+
     <div class="bg-white rounded-xl shadow-sm p-5 mb-6">
       <!-- Tabs -->
       <div class="flex gap-2 mb-5">
-        <button id="tab-all"    onclick="switchTab('all')"    class="tab-btn px-5 py-1.5 rounded-full text-sm font-semibold bg-indigo-600 text-white transition">All</button>
-        <button id="tab-open"   onclick="switchTab('open')"   class="tab-btn px-5 py-1.5 rounded-full text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Open</button>
-        <button id="tab-closed" onclick="switchTab('closed')" class="tab-btn px-5 py-1.5 rounded-full text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Closed</button>
-     </div>
+        <button id="tab-all"    onclick="switchTab('all')"    class="tab-btn px-5 py-1.5 rounded-md text-sm font-semibold bg-indigo-600 text-white transition">All</button>
+        <button id="tab-open"   onclick="switchTab('open')"   class="tab-btn px-5 py-1.5 rounded-md text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Open</button>
+        <button id="tab-closed" onclick="switchTab('closed')" class="tab-btn px-5 py-1.5 rounded-md text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Closed</button>
+      </div>
 
 
-     <div class="flex items-center justify-between px-1">
+      <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-3">
-            <img src="./assets/Aperture.png" alt="icon" class="w-8 h-8"/>
+          <img src="./assets/Aperture.png" alt="icon" class="w-8 h-8" style="filter: drop-shadow(0 0 6px #818cf8);"/>
+          <div>
+            <p id="issue-count" class="font-bold text-gray-900 text-base">0 Issues</p>
+            <p class="text-xs text-gray-500">Track and manage your project issues</p>
+          </div>
         </div>
-        <p id="issue-count" class="font-bold text-gray-900 text-base">0 Issues</p>
-        <p class="text-xs text-gray-500">Track and manage your project issues</p>
-     </div>
-     </div>
-     <div class="flex items-center gap-4 text-sm">
-        <span class="flex items-center gap-1.5 text-gray-600">
-            <img src="./assets/Open-Status.png" alt="open" class="w-4 h-4"> Open
-        </span>
-        <span class="flex items-center gap-1.5 text-gray-600">
-            <img src="./assets/Closed- Status .png" alt="closed" class="w-4 h-4">Closed
-        </span>
-     </div>
-     </div>
-     </div>
+        <div class="flex items-center gap-4 text-sm text-gray-600">
+          <span class="flex items-center gap-2">
+            <span style="width:10px; height:10px; border-radius:50%; background:#22c55e; display:inline-block;"></span>
+            Open
+          </span>
+          <span class="flex items-center gap-2">
+            <span style="width:10px; height:10px; border-radius:50%; background:#a855f7; display:inline-block;"></span>
+            Closed
+          </span>
+        </div>
+      </div>
+    </div>
 
-      <!-- Loading Spinner -->
+    <!-- Loading Spinner -->
     <div id="loading" class="flex justify-center items-center py-16">
       <div class="spinner"></div>
     </div>
  
-    <!-- Cards Grid -->
     <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 hidden"></div>
- 
-    
+
     <p id="no-results" class="text-center text-gray-400 py-12 hidden">No issues found.</p>
+
   </div>
 
-   <!-- Modal -->
+  <!-- Modal -->
   <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden px-4">
     <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
       <h2 id="modal-title" class="text-lg font-bold text-gray-900 mb-3"></h2>
- 
-      
+
       <div class="flex items-center gap-2 mb-3 flex-wrap">
         <span id="modal-status" class="text-xs font-semibold px-2.5 py-1 rounded-full"></span>
         <span id="modal-meta" class="text-xs text-gray-500"></span>
       </div>
 
-      
       <div id="modal-labels" class="flex flex-wrap gap-2 mb-3"></div>
- 
 
       <p id="modal-description" class="text-sm text-gray-600 mb-4"></p>
 
-       <!-- Assignee + Priority -->
       <div class="flex gap-8 mb-5">
         <div>
           <p class="text-xs text-gray-500 mb-0.5">Assignee:</p>
@@ -129,7 +140,7 @@
         </div>
       </div>
 
-        <!-- Close button -->
+
       <div class="flex justify-end">
         <button onclick="closeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition">
           Close
@@ -137,7 +148,7 @@
       </div>
     </div>
   </div>
- 
+
   <script src="./js/issues.js"></script>
   <script src="./js/modal.js"></script>
 </body>

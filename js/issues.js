@@ -18,7 +18,7 @@ async function loadIssues() {
   }
 }
 
-// Render issue cards in the grid
+
 function renderCards(issues) {
   const grid = document.getElementById("cards-grid");
   const noResults = document.getElementById("no-results");
@@ -43,7 +43,7 @@ function renderCards(issues) {
   }
 }
 
-// Create a single card element
+
 function createCard(issue) {
   const isOpen = issue.status === "open";
   const borderClass = isOpen ? "card-open" : "card-closed";
@@ -51,13 +51,13 @@ function createCard(issue) {
 
   const statusIcon = isOpen
     ? '<img src="./assets/Open-Status.png" class="w-4 h-4" alt="open"/>'
-    : '<img src="./assets/Closed-_Status_.png" class="w-4 h-4" alt="closed"/>';
+    : '<img src="./assets/Closed- Status .png" class="w-4 h-4" alt="closed"/>';
 
   const labelsHTML = buildLabels(issue.labels);
   const createdAt = formatDate(issue.createdAt);
 
   const div = document.createElement("div");
-  div.className = "bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition " + borderClass;
+  div.className = "bg-white rounded-xl shadow-sm cursor-pointer hover:shadow-md transition " + borderClass;
   div.onclick = function() {
     openModal(issue);
   };
@@ -90,9 +90,9 @@ function switchTab(tab) {
   for (var i = 0; i < tabs.length; i++) {
     var btn = document.getElementById("tab-" + tabs[i]);
     if (tabs[i] === tab) {
-      btn.className = "tab-btn px-5 py-1.5 rounded-full text-sm font-semibold bg-indigo-600 text-white transition";
+      btn.className = "tab-btn px-5 py-1.5 rounded-md text-sm font-semibold bg-indigo-600 text-white transition";
     } else {
-      btn.className = "tab-btn px-5 py-1.5 rounded-full text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition";
+      btn.className = "tab-btn px-5 py-1.5 rounded-md text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition";
     }
   }
 
@@ -115,7 +115,7 @@ function switchTab(tab) {
   renderCards(filtered);
 }
 
-// Search functionality
+// Search
 async function handleSearch() {
   const query = document.getElementById("search-input").value.trim();
 
@@ -145,7 +145,7 @@ async function handleSearch() {
   }
 }
 
-// Show or hide loading spinner
+//loading spinner
 function showLoading(show) {
   var loading = document.getElementById("loading");
   var grid = document.getElementById("cards-grid");
@@ -158,7 +158,7 @@ function showLoading(show) {
   }
 }
 
-// Get priority badge class
+//priority badge class
 function getPriorityClass(priority) {
   if (!priority) return "badge-low";
   if (priority.toLowerCase() === "high") return "badge-high";
@@ -166,24 +166,51 @@ function getPriorityClass(priority) {
   return "badge-low";
 }
 
-// Build labels HTML
+
 function buildLabels(labels) {
-  if (!labels || labels.length === 0) return "";
+  if (!labels) {
+    return "";
+  }
 
   var html = "";
+
   for (var i = 0; i < labels.length; i++) {
     var label = labels[i];
-    var key = label.toLowerCase().replace(/\s+/g, "");
-    var cls = "label-default";
-    if (key === "bug") cls = "label-bug";
-    else if (key === "helpwanted") cls = "label-helpwanted";
-    else if (key === "enhancement") cls = "label-enhancement";
-    html += '<span class="text-xs px-2 py-0.5 rounded-full font-medium ' + cls + '">' + label + "</span>";
+
+    var className = "";
+    var iconPath = "";
+
+    if (label.toLowerCase() === "bug") {
+      className = "label-bug";
+      iconPath = "./assets/BugDroid.png";
+    } 
+    else if (label.toLowerCase() === "help wanted") {
+      className = "label-helpwanted";
+      iconPath = "./assets/Lifebuoy.png";
+    } 
+    else if (label.toLowerCase() === "enhancement") {
+      className = "label-enhancement";
+      iconPath = "./assets/Sparkle.png";
+    } 
+    else {
+      className = "label-default";
+    }
+
+    html += '<span class="' + className + ' text-xs px-2 py-1 rounded-full" style="display:inline-flex; align-items:center; gap:4px;">';
+
+    if (iconPath !== "") {
+      html += '<img src="' + iconPath + '" style="width:12px; height:12px;" />';
+    }
+
+    html += label.toUpperCase();
+
+    html += "</span> ";
   }
+
   return html;
 }
 
-// Format date
+
 function formatDate(dateStr) {
   if (!dateStr) return "";
   var d = new Date(dateStr);
@@ -193,7 +220,7 @@ function formatDate(dateStr) {
   return month + "/" + day + "/" + year;
 }
 
-// Run when page loads
+
 document.addEventListener("DOMContentLoaded", function() {
   if (!localStorage.getItem("isLoggedIn")) {
     window.location.href = "index.html";
